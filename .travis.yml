@@ -7,7 +7,8 @@ services:
 
 before_install: sudo pip install awscli
 
-install: |
+install:
+- |
   aws s3 sync \
     s3://teradata-presto/travis_build_artifacts/Teradata/presto/product_tests_downloaded_artifacts/2894.4/ \
     /tmp/artifacts \
@@ -17,3 +18,14 @@ install: |
     --include 'presto-cli-*-executable.jar' \
     --include 'presto-product-tests-*-executable.jar' \
     --no-sign-request
+- git clone --depth=50 --branch=product_tests_downloaded_artifacts https://github.com/Teradata/presto.git
+- cd presto
+- git checkout `cat /tmp/artifacts/git-revision.txt`
+- tar -xf /tmp/artifacts/presto-server-*.tar.gz -C /tmp/
+
+script: |
+  export PRESTO_SERVER_DIR=/tmp/presto-server-*
+  export PRESTO_CLI_JAR=/tmp/artifacts/presto-cli-*-executable.jar
+  export PRODUCT_TESTS_JAR=/tmp/artifacts/presto-product-tests-*-executable.jar
+  ./presto-product-tests/bin/run_on_docker.sh multinode -x quarantine,big_query,storage_formats,profile_specific_tests
+
