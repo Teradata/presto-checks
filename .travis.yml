@@ -4,3 +4,16 @@ dist: trusty
 
 services:
 - docker
+
+before_install: sudo pip install awscli
+
+install: |
+  aws s3 sync \
+    s3://teradata-presto/travis_build_artifacts/Teradata/presto/product_tests_downloaded_artifacts/2894.4/ \
+    /tmp/artifacts \
+    --exclude '*' \
+    --include 'git-revision.txt' \
+    --include 'presto-server-*.tar.gz' \
+    --include 'presto-cli-*-executable.jar' \
+    --include 'presto-product-tests-*-executable.jar' \
+    --no-sign-request
