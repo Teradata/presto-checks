@@ -13,21 +13,22 @@ env:
 # The whole section is reserved for overriding by cron-ed API calls.
 # Partial overrides are impossible. See https://docs.travis-ci.com/user/triggering-builds.
 before_install:
- - export ARTIFACTS_S3_URI='S3_URI_WILL_BE_OVERRIDEN'
- - export BRANCH='BRANCH_WILL_BE_OVERRIDEN'
- - export BUILD='BUILD_WILL_BE_OVERRIDEN'
+ - export ARTIFACTS_S3_BUCKET='ARTIFACTS_S3_BUCKET_WILL_BE_OVERRIDEN'
+ - export ARTIFACTS_S3_PATH='ARTIFACTS_S3_PATH_WILL_BE_OVERRIDEN'
+ - export PRESTO_BRANCH='BRANCH_WILL_BE_OVERRIDEN'
+ - export PRESTO_BUILD='BUILD_WILL_BE_OVERRIDEN'
 
 install:
 - sudo pip install awscli
 - |
-  aws s3 sync ${ARTIFACTS_S3_URI}/${BRANCH}/${BUILD} /tmp/artifacts \
+  aws s3 sync s3://${ARTIFACTS_S3_BUCKET}/${ARTIFACTS_S3_PATH}/${PRESTO_BRANCH}/${PRESTO_BUILD} /tmp/artifacts \
     --exclude '*' \
     --include 'git-revision.txt' \
     --include 'presto-server-*.tar.gz' \
     --include 'presto-cli-*-executable.jar' \
     --include 'presto-product-tests-*-executable.jar' \
     --no-sign-request
-- git clone --depth=50 --branch=${BRANCH} https://github.com/Teradata/presto.git
+- git clone --depth=50 --branch=${PRESTO_BRANCH} https://github.com/Teradata/presto.git
 - cd presto
 - git checkout `cat /tmp/artifacts/git-revision.txt`
 - tar -xf /tmp/artifacts/presto-server-*.tar.gz -C /tmp/
@@ -37,4 +38,3 @@ script: |
   export PRESTO_CLI_JAR=/tmp/artifacts/presto-cli-*-executable.jar
   export PRODUCT_TESTS_JAR=/tmp/artifacts/presto-product-tests-*-executable.jar
   ./presto-product-tests/bin/run_on_docker.sh $PRODUCT_TESTS
-
