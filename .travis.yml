@@ -6,20 +6,21 @@ services:
 - docker
 
 env:
-  global:
-  - BRANCH=product_tests_downloaded_artifacts
-  - ARTIFACTS_S3_URI=s3://teradata-presto/travis_build_artifacts/Teradata/presto
   matrix:
   - PRODUCT_TESTS='multinode -x quarantine,big_query,storage_formats,profile_specific_tests'
   - PRODUCT_TESTS='singlenode-kerberos-hdfs-impersonation -g storage_formats,cli,hdfs_impersonation,authorization'
 
-
-before_install: sudo pip install awscli
+# The whole section is reserved for overriding by cron-ed API calls.
+# Partial overrides are impossible. See https://docs.travis-ci.com/user/triggering-builds.
+before_install:
+ - export ARTIFACTS_S3_URI='S3_URI_WILL_BE_OVERRIDEN'
+ - export BRANCH='BRANCH_WILL_BE_OVERRIDEN'
+ - export BUILD='BUILD_WILL_BE_OVERRIDEN'
 
 install:
-- LAST_BUILD=`aws s3 ls $ARTIFACTS_S3_URI/$BRANCH/ --no-sign-request | awk '{print $2}' | sed 's/.$//' | sort -n | tail -n1`
+- sudo pip install awscli
 - |
-  aws s3 sync ${ARTIFACTS_S3_URI}/${BRANCH}/${LAST_BUILD} /tmp/artifacts \
+  aws s3 sync ${ARTIFACTS_S3_URI}/${BRANCH}/${BUILD} /tmp/artifacts \
     --exclude '*' \
     --include 'git-revision.txt' \
     --include 'presto-server-*.tar.gz' \
