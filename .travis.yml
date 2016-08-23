@@ -9,6 +9,10 @@ env:
   global:
   - BRANCH=product_tests_downloaded_artifacts
   - ARTIFACTS_S3_URI=s3://teradata-presto/travis_build_artifacts/Teradata/presto
+  matrix:
+  - PRODUCT_TESTS='multinode -x quarantine,big_query,storage_formats,profile_specific_tests'
+  - PRODUCT_TESTS='singlenode-kerberos-hdfs-impersonation -g storage_formats,cli,hdfs_impersonation,authorization'
+
 
 before_install: sudo pip install awscli
 
@@ -31,5 +35,5 @@ script: |
   export PRESTO_SERVER_DIR=/tmp/presto-server-*
   export PRESTO_CLI_JAR=/tmp/artifacts/presto-cli-*-executable.jar
   export PRODUCT_TESTS_JAR=/tmp/artifacts/presto-product-tests-*-executable.jar
-  ./presto-product-tests/bin/run_on_docker.sh multinode -x quarantine,big_query,storage_formats,profile_specific_tests
+  ./presto-product-tests/bin/run_on_docker.sh $PRODUCT_TESTS
 
