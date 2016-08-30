@@ -15,12 +15,23 @@ PRESTO_BRANCH=$4
 ARTIFACTS_S3_BUCKET='teradata-presto'
 ARTIFACTS_S3_PATH='travis_build_artifacts/Teradata/presto'
 
+function aws_s3_ls() {
+    aws s3 ls "$1" --no-sign-request | awk '{print $NF}'
+}
+
 if [[ "$PRESTO_BRANCH" == '@{LATEST_SPRINT_BRANCH}' ]]; then
-    PRESTO_BRANCH=`aws s3 ls s3://${ARTIFACTS_S3_BUCKET}/${ARTIFACTS_S3_PATH}/ --no-sign-request | awk '{print $2}' | sed 's/.$//' | egrep '^sprint-[0-9]+$' | sort -n -t '-' -k 2 | tail -n1`
+    PRESTO_BRANCH=`aws_s3_ls s3://${ARTIFACTS_S3_BUCKET}/${ARTIFACTS_S3_PATH}/ | sed 's/[/]$//' | egrep '^sprint-[0-9]+$' | sort -n -t '-' -k 2 | tail -n1`
     echo "Current sprint branch resolved to [${PRESTO_BRANCH}]"
 fi
 
-PRESTO_BUILD=`aws s3 ls s3://${ARTIFACTS_S3_BUCKET}/${ARTIFACTS_S3_PATH}/$PRESTO_BRANCH/ --no-sign-request | awk '{print $2}' | sed 's/.$//' | sort -n | tail -n1`
+PRESTO_BUILD=`aws_s3_ls s3://${ARTIFACTS_S3_BUCKET}/${ARTIFACTS_S3_PATH}/${PRESTO_BRANCH}/ | sed 's/[/]$//' | sort -n | tail -n1`
+
+TRAVIS_CHECKS_DIR=`aws_s3_ls s3://${ARTIFACTS_S3_BUCKET}/${ARTIFACTS_S3_PATH}/${PRESTO_BRANCH}/${PRESTO_BUILD}/travis_checks/`
+
+if [[ "$TRAVIS_CHECKS_DIR" != '' ]]; then
+    echo "Checks already performed for build [$PRESTO_BUILD], not triggering them again."
+    exit 0
+fi
 
 BODY=$(cat << EOF
 {
