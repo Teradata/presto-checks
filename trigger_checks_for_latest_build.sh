@@ -26,6 +26,11 @@ fi
 
 PRESTO_BUILD=`aws_s3_ls s3://${ARTIFACTS_S3_BUCKET}/${ARTIFACTS_S3_PATH}/${PRESTO_BRANCH}/ | sed 's/[/]$//' | sort -n | tail -n1`
 
+if [[ -z $PRESTO_BUILD ]]; then
+    echo "No builds found for branch [$PRESTO_BRANCH]. Exiting."
+    exit 1
+fi
+
 TRAVIS_CHECKS_DIR=`aws_s3_ls s3://${ARTIFACTS_S3_BUCKET}/${ARTIFACTS_S3_PATH}/${PRESTO_BRANCH}/${PRESTO_BUILD}/travis_checks/`
 
 if [[ "$TRAVIS_CHECKS_DIR" != '' ]]; then
