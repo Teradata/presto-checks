@@ -7,8 +7,11 @@ services:
 
 env:
   matrix:
-  - PRODUCT_TESTS='multinode -x quarantine,big_query,storage_formats,profile_specific_tests'
-  - PRODUCT_TESTS='singlenode-kerberos-hdfs-impersonation -g storage_formats,cli,hdfs_impersonation,authorization'
+  - PRODUCT_TESTS='multinode -x quarantine,big_query,profile_specific_tests'
+  - PRODUCT_TESTS='singlenode -g big_query,hdfs_no_impersonation'
+  - PRODUCT_TESTS='singlenode-hdfs-impersonation -g hdfs_impersonation'
+  - PRODUCT_TESTS='singlenode-kerberos-hdfs-impersonation -g hdfs_impersonation,authorization'
+#  - PRODUCT_TESTS='singlenode-kerberos-hdfs-no-impersonation -g authorization'
 
 # The whole section is reserved for overriding by cron-ed API calls.
 # Partial overrides are impossible. See https://docs.travis-ci.com/user/triggering-builds.
