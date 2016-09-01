@@ -7,11 +7,9 @@ services:
 
 env:
   matrix:
-  - PRODUCT_TESTS='multinode -x quarantine,big_query,profile_specific_tests'
-  - PRODUCT_TESTS='singlenode -g big_query,hdfs_no_impersonation'
-  - PRODUCT_TESTS='singlenode-hdfs-impersonation -g hdfs_impersonation'
-  - PRODUCT_TESTS='singlenode-kerberos-hdfs-impersonation -g hdfs_impersonation,authorization'
-#  - PRODUCT_TESTS='singlenode-kerberos-hdfs-no-impersonation -g authorization'
+  - PRODUCT_TESTS='bulk'
+  - PRODUCT_TESTS='big_query'
+  - PRODUCT_TESTS='auth_mechanisms'
 
 # The whole section is reserved for overriding by cron-ed API calls.
 # Partial overrides are impossible. See https://docs.travis-ci.com/user/triggering-builds.
@@ -36,11 +34,22 @@ install:
 - git checkout `cat /tmp/artifacts/git-revision.txt`
 - tar -xf /tmp/artifacts/presto-server-*.tar.gz -C /tmp/
 
-script: |
-  export PRESTO_SERVER_DIR=/tmp/presto-server-*
-  export PRESTO_CLI_JAR=/tmp/artifacts/presto-cli-*-executable.jar
-  export PRODUCT_TESTS_JAR=/tmp/artifacts/presto-product-tests-*-executable.jar
-  ./presto-product-tests/bin/run_on_docker.sh $PRODUCT_TESTS
+script:
+  - export PRESTO_SERVER_DIR=/tmp/presto-server-*
+  - export PRESTO_CLI_JAR=/tmp/artifacts/presto-cli-*-executable.jar
+  - export PRODUCT_TESTS_JAR=/tmp/artifacts/presto-product-tests-*-executable.jar
+  - |
+      [ ! $PRODUCT_TESTS == 'bulk' ] || \
+        ./presto-product-tests/bin/run_on_docker.sh multinode -x quarantine,big_query,profile_specific_tests
+  - |
+      [ ! $PRODUCT_TESTS == 'big_query' ] || \
+        ./presto-product-tests/bin/run_on_docker.sh singlenode -g big_query,hdfs_no_impersonation
+  - |
+      [ ! $PRODUCT_TESTS == 'auth_mechanisms' ] || \
+        ./presto-product-tests/bin/run_on_docker.sh singlenode-hdfs-impersonation -g hdfs_impersonation
+  - |
+      [ ! $PRODUCT_TESTS == 'auth_mechanisms' ] || \
+        ./presto-product-tests/bin/run_on_docker.sh singlenode-kerberos-hdfs-impersonation -g hdfs_impersonation,authorization
 
 after_script:
 - |
