@@ -1,4 +1,6 @@
 # Presto Checks
+[![Build Status - master](https://travis-ci.org/Teradata/presto-checks.svg?branch=master)](https://travis-ci.org/Teradata/presto-checks)
+[![Build Status - sprint](https://travis-ci.org/Teradata/presto-checks.svg?branch=sprint)](https://travis-ci.org/Teradata/presto-checks)
 
 This project defines build automation for Presto that is meant to be run periodically / for a selection of commits in selected branches.
 
