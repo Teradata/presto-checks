@@ -65,3 +65,11 @@ after_script:
     aws s3 sync /tmp/links \
       s3://${ARTIFACTS_S3_BUCKET}/${ARTIFACTS_S3_PATH}/${PRESTO_BRANCH}/${PRESTO_BUILD}/travis_checks
   fi
+
+notifications:
+  slack:
+    rooms:
+      - secure: nySGKmnKD3PyKeKC7G6bHqnPgPeBdlrQsBqWGYrPtvXqdF8X9JLUFHgHrRfeRuMfmqkEjRIibBvnjc6dZNcBZ+fJ8XuF7uAeJofsUZbUpfu8a1P3cglCYVKbmC3ilM1oraIqWxagwxhhBAtnMy5wucrAOQTEBCLkQCtPUyFVCG88VbHXz/5ICtGaKlNUh+HVYXPsx//gyMGT+XdhChtKPSiNlAlmLyqdJAbHAl0TiAaleV+KC8f6LR8vZnew8cuUyv/bXgM0/ImULA8Fsc9uAAvGFwQJ/aDdcsgr9Y0PBLnxnYcbVVudlG5mhjOuKmR2IqOLIf4yf+WhJU3uEwfYUJ52zW0uBRrxj1NszwB4mrFa6qBv+1BuCEiS1fQ54/FInriJE+j2yg/UHN5KAwG0Dt2bOeSH8PZFCdALu9mONHVlqMHPnrMT2PvIUmkvhtAFvOKC8VsIAazTtV1DireV/Zhz8CjV2zBYtWJHNwA2OzK//78jl1X/633c40Hqx54Ya/gTtEvPb91wvbGL2KWK3uH/LUJhn9apjNSWT7tk2Fqcmq7HCGeaHkUMjAbZL45FffChBS1r0SO8/0vteVECbUbTOYkprm9Fb4vXS16GCeLwqfcFEZa13lTRTGaK8FALOm/aHsCzABh2ojdOI1XU32R97bVYd4jaW527Dd0SjyY=
+    on_success: change
+    on_failure: always
+
