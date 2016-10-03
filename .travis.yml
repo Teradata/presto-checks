@@ -7,6 +7,8 @@ services:
 
 env:
   global:
+    - DOCKER_IMAGES_VERSION=latest
+    - HADOOP_MASTER_IMAGE='teradatalabs/hdp2.5-hive:latest'
     - MAVEN_OPTS="-Xmx512M -XX:+ExitOnOutOfMemoryError"
     - MAVEN_SKIP_CHECKS_AND_DOCS="-Dair.check.skip-all=true -Dmaven.javadoc.skip=true"
     - MAVEN_FAST_INSTALL="-DskipTests $MAVEN_SKIP_CHECKS_AND_DOCS -B -q -T C1"
