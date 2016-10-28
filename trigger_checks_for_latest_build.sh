@@ -31,10 +31,10 @@ if [[ -z $PRESTO_BUILD ]]; then
     exit 1
 fi
 
-TRAVIS_CHECKS_DIR=`aws_s3_ls s3://${ARTIFACTS_S3_BUCKET}/${ARTIFACTS_S3_PATH}/${PRESTO_BRANCH}/${PRESTO_BUILD}/travis_checks/`
+CHECKS_RESULTS_DIR=`aws_s3_ls s3://${ARTIFACTS_S3_BUCKET}/${ARTIFACTS_S3_PATH}/${PRESTO_BRANCH}/${PRESTO_BUILD}/travis_checks/${CHECKS_BRANCH}/`
 
-if [[ "$TRAVIS_CHECKS_DIR" != '' ]]; then
-    echo "Checks already performed for build [$PRESTO_BUILD], not triggering them again."
+if [[ "$CHECKS_RESULTS_DIR" != '' ]]; then
+    echo "Checks for checks branch: [${CHECKS_BRANCH}] already performed for build [${PRESTO_BUILD}], not triggering them again."
     exit 0
 fi
 
