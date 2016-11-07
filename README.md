@@ -5,6 +5,7 @@ This project defines build automation for Presto that is meant to be run periodi
 ## Requirements
 - bash
 - [aws cli](https://github.com/aws/aws-cli#installation)
+- [travis cli](https://github.com/travis-ci/travis.rb#installation)
 - access to https://api.travis-ci.org/ from the machine you're executing `trigger_checks_for_latest_build.sh`
 - `$REPO` - the slug of the repo where you're reading this, probably `Teradata/presto-checks`
 - `$TOKEN` - Travis token obtained by executing `travis --token` in this repo's dir
