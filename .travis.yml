@@ -54,6 +54,9 @@ script:
   - |
       [ ! $PRODUCT_TESTS == 'auth_mechanisms' ] || \
         ./presto-product-tests/bin/run_on_docker.sh singlenode-kerberos-hdfs-impersonation -g hdfs_impersonation,authorization
+  - |
+      [ ! $PRODUCT_TESTS == 'auth_mechanisms' ] || \
+        ./presto-product-tests/bin/run_on_docker.sh singlenode-ldap -g ldap_cli
 
 after_script:
 - |
