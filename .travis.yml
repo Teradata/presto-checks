@@ -4,6 +4,10 @@ dist: trusty
 
 services:
 - docker
+addons:
+  apt:
+    packages:
+       python-dev
 
 env:
   matrix:
