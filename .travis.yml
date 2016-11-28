@@ -66,8 +66,7 @@ script:
   - export PRESTO_CLI_JAR=/tmp/artifacts/presto-cli-*-executable.jar
   - export PRODUCT_TESTS_JAR=/tmp/artifacts/presto-product-tests-*-executable.jar
   - export PRESTO_JDBC_DRIVER_JAR=/tmp/artifacts/presto-jdbc-*.jar
-  - |
-    ./presto-product-tests/bin/run_on_docker.sh ${CLUSTER_TYPE} ${PRODUCT_TESTS}
+  - travis_wait 50 ./presto-product-tests/bin/run_on_docker.sh ${CLUSTER_TYPE} ${PRODUCT_TESTS}
 
 after_script:
 - |
