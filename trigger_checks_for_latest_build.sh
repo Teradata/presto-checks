@@ -4,6 +4,7 @@ if [[ $# -ne 4 ]]; then
   echo 'Usage: trigger_checks_for_latest_build.sh $CHECKS_GITHUB_REPO $CHECKS_REPO_TRAVIS_TOKEN $CHECKS_BRANCH $PRESTO_BRANCH'
   echo ''
   echo 'Passing $PRESTO_BRANCH = `@{LATEST_SPRINT_BRANCH}` will trigger checks for the latest sprint branch.'
+  echo 'Passing $PRESTO_BRANCH = `@{LATEST_RELEASE_BRANCH}` will trigger checks for the latest release branch.'
   exit 1
 fi
 
@@ -19,9 +20,19 @@ function aws_s3_ls() {
     aws s3 ls "$1" --no-sign-request | awk '{print $NF}'
 }
 
+function version_sort() {
+  #Mac OS has an ancient version of sort, so we fall back to docker if the -V switch is not supported
+  sort -V || docker run -i debian:wheezy-slim sort -V
+}
+
 if [[ "$PRESTO_BRANCH" == '@{LATEST_SPRINT_BRANCH}' ]]; then
     PRESTO_BRANCH=`aws_s3_ls s3://${ARTIFACTS_S3_BUCKET}/${ARTIFACTS_S3_PATH}/ | sed 's/[/]$//' | egrep '^sprint-[0-9]+$' | sort -n -t '-' -k 2 | tail -n1`
     echo "Current sprint branch resolved to [${PRESTO_BRANCH}]"
+fi
+
+if [[ "$PRESTO_BRANCH" == '@{LATEST_RELEASE_BRANCH}' ]]; then
+    PRESTO_BRANCH=`aws_s3_ls s3://${ARTIFACTS_S3_BUCKET}/${ARTIFACTS_S3_PATH}/ | sed 's/[/]$//' | egrep '^release-.*$' | version_sort | tail -n1`
+    echo "Current release branch resolved to [${PRESTO_BRANCH}]"
 fi
 
 PRESTO_BUILD=`aws_s3_ls s3://${ARTIFACTS_S3_BUCKET}/${ARTIFACTS_S3_PATH}/${PRESTO_BRANCH}/ | sed 's/[/]$//' | sort -n | tail -n1`
