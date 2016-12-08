@@ -1,9 +1,15 @@
-language: generic
+language: java
 
 dist: trusty
 
 services:
 - docker
+
+env:
+  global:
+    - MAVEN_OPTS="-Xmx512M -XX:+ExitOnOutOfMemoryError"
+    - MAVEN_SKIP_CHECKS_AND_DOCS="-Dair.check.skip-all=true -Dmaven.javadoc.skip=true"
+    - MAVEN_FAST_INSTALL="-DskipTests $MAVEN_SKIP_CHECKS_AND_DOCS -B -q -T C1"
 
 matrix:
   include:
@@ -34,6 +40,9 @@ matrix:
     - env:
       - PRODUCT_TESTS='-g ldap_cli'
       - CLUSTER_TYPE='singlenode-ldap'
+    - env:
+      - MVN_TESTS='-Dtest=TestLocalBinarySpilledQueries'
+      - MVN_MODULES='-pl presto-tests'
 
 # The whole section is reserved for overriding by cron-ed API calls.
 # Partial overrides are impossible. See https://docs.travis-ci.com/user/triggering-builds.
@@ -49,24 +58,41 @@ install:
   aws s3 sync s3://${ARTIFACTS_S3_BUCKET}/${ARTIFACTS_S3_PATH}/${PRESTO_BRANCH}/${PRESTO_BUILD} /tmp/artifacts \
     --exclude '*' \
     --include 'git-revision.txt' \
-    --include 'presto-server-*.tar.gz' \
-    --include 'presto-cli-*-executable.jar' \
-    --include 'presto-product-tests-*-executable.jar' \
-    --include 'presto-jdbc-*.jar' \
-    --exclude '*-tests.jar' \
-    --exclude '*-sources.jar' \
     --no-sign-request
 - git clone --depth=50 --branch=${PRESTO_BRANCH} https://github.com/Teradata/presto.git
 - cd presto
 - git checkout `cat /tmp/artifacts/git-revision.txt`
-- tar -xf /tmp/artifacts/presto-server-*.tar.gz -C /tmp/
+- |
+  if [[ -v PRODUCT_TESTS ]]; then
+    aws s3 sync s3://${ARTIFACTS_S3_BUCKET}/${ARTIFACTS_S3_PATH}/${PRESTO_BRANCH}/${PRESTO_BUILD} /tmp/artifacts \
+      --exclude '*' \
+      --include 'presto-server-*.tar.gz' \
+      --include 'presto-cli-*-executable.jar' \
+      --include 'presto-product-tests-*-executable.jar' \
+      --include 'presto-jdbc-*.jar' \
+      --exclude '*-tests.jar' \
+      --exclude '*-sources.jar' \
+      --no-sign-request
+    tar -xf /tmp/artifacts/presto-server-*.tar.gz -C /tmp/
+  fi
+- |
+  if [[ -v MVN_TESTS ]]; then
+    ./mvnw install ${MAVEN_FAST_INSTALL} ${MVN_MODULES} -am
+  fi
 
 script:
   - export PRESTO_SERVER_DIR=/tmp/presto-server-*
   - export PRESTO_CLI_JAR=/tmp/artifacts/presto-cli-*-executable.jar
   - export PRODUCT_TESTS_JAR=/tmp/artifacts/presto-product-tests-*-executable.jar
   - export PRESTO_JDBC_DRIVER_JAR=/tmp/artifacts/presto-jdbc-*.jar
-  - travis_wait 50 ./presto-product-tests/bin/run_on_docker.sh ${CLUSTER_TYPE} ${PRODUCT_TESTS}
+  - |
+    if [[ -v PRODUCT_TESTS ]]; then
+      travis_wait 45 ./presto-product-tests/bin/run_on_docker.sh ${CLUSTER_TYPE} ${PRODUCT_TESTS}
+    fi
+  - |
+    if [[ -v MVN_TESTS ]]; then
+      ./mvnw test $MAVEN_SKIP_CHECKS_AND_DOCS -B ${MVN_MODULES} ${MVN_TESTS}
+    fi
 
 after_script:
 - |
