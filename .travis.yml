@@ -41,8 +41,8 @@ matrix:
       - PRODUCT_TESTS='-g ldap_cli'
       - CLUSTER_TYPE='singlenode-ldap'
     - env:
-      - MVN_TESTS='-Dtest=TestLocalBinarySpilledQueries'
-      - MVN_MODULES='-pl presto-tests'
+      - MVN_TESTS='-Dtest=TestLocalBinarySpilledQueries,TestPostgreSqlDistributedQueries,TestMySqlDistributedQueries'
+      - MVN_MODULES='-pl presto-tests,presto-mysql,presto-postgresql'
 
 # The whole section is reserved for overriding by cron-ed API calls.
 # Partial overrides are impossible. See https://docs.travis-ci.com/user/triggering-builds.
