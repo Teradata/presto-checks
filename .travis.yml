@@ -87,7 +87,7 @@ script:
   - export PRESTO_JDBC_DRIVER_JAR=/tmp/artifacts/presto-jdbc-*.jar
   - |
     if [[ -v PRODUCT_TESTS ]]; then
-      travis_wait 45 ./presto-product-tests/bin/run_on_docker.sh ${CLUSTER_TYPE} ${PRODUCT_TESTS}
+      ../ensure_command_output.sh ./presto-product-tests/bin/run_on_docker.sh ${CLUSTER_TYPE} ${PRODUCT_TESTS}
     fi
   - |
     if [[ -v MVN_TESTS ]]; then
