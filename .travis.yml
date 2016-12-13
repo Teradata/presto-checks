@@ -37,8 +37,11 @@ matrix:
       - PRODUCT_TESTS='-g hdfs_impersonation'
       - CLUSTER_TYPE='singlenode-hdfs-impersonation'
     - env:
-      - PRODUCT_TESTS='-g hdfs_impersonation,authorization'
+      - PRODUCT_TESTS='-g hdfs_impersonation,authorization,storage_formats,cli'
       - CLUSTER_TYPE='singlenode-kerberos-hdfs-impersonation'
+    - env:
+      - PRODUCT_TESTS='-g hdfs_no_impersonation,storage_formats,cli'
+      - CLUSTER_TYPE='singlenode-kerberos-hdfs-no-impersonation'
     - env:
       - PRODUCT_TESTS='-g ldap_cli'
       - CLUSTER_TYPE='singlenode-ldap'
