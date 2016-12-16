@@ -1,59 +1,39 @@
-#!/bin/bash
+#!/bin/bash -e
 
-MAGIC_END_STRING="END OF SUBCOMMAND"
 OUTPUT_SLEEP=60
 
-function run_command {
-  PIPE=$1
-  shift
-  CMD="$@"
-  $CMD 1>$PIPE 2>$PIPE
-  echo "$MAGIC_END_STRING" 1>$PIPE
-}
-
-function run_ping {
-  PIPE=$1
-  shift
-  CMD="$@"
-  (
+function print_with_interval {
+  message="$1"
+  interval="$2"
     while [ 1 ]
     do
-      echo "Command '$CMD' is still running."
-      sleep $OUTPUT_SLEEP
+      echo $message
+      sleep $interval
     done
-  ) >$PIPE
 }
 
-function presto_wait {
-  PIPE=$1
-  shift
+function wait_and_print_ping {
   CMD="$@"
 
-  mkfifo $PIPE
-  echo "Starting command '$CMD' using pipe $PIPE"
-  run_command $PIPE $CMD &
-  run_ping $PIPE $CMD &
-  ping_pid=$!
-  
-  while read output
-  do
-    echo $output
-    if [ "$output" == "$MAGIC_END_STRING" ]
-    then
-      rm -f $PIPE
-      kill -15 $ping_pid
-      exit 0
-    fi
-  done < $PIPE
+  echo "Starting command '$CMD'"
+  $CMD &
+  command_pid=$!
+  print_with_interval "Command '$CMD' is still running." $OUTPUT_SLEEP &
+  print_pid=$!
+ 
+  wait $command_pid
+  exit_code=$?
+      
+  kill -TERM $print_pid
+  return $exit_code
 }
 
 if [ $# -lt 2 ]
 then
-  echo "Usage: $0 [PIPE_NAME] [COMMAND]"
+  echo "Usage: $0 [COMMAND]"
   exit 1
 fi
 
 trap "kill 0" SIGINT
-PIPE="/tmp/command_output_pipe_$( date +%s )"
 CMD="$@"
-presto_wait $PIPE $CMD
+wait_and_print_ping $CMD
