@@ -95,7 +95,7 @@ script:
   - export PRODUCT_TESTS_JAR=/tmp/artifacts/presto-product-tests-*-executable.jar
   - export PRESTO_JDBC_DRIVER_JAR=/tmp/artifacts/presto-jdbc-*.jar
   - |
-    if [[ -v PRODUCT_TESTS ]]; then
+    if [[ -v PRODUCT_TESTS ]] && [[ -d ./presto-product-tests/conf/docker/${CLUSTER_TYPE} ]]; then
       ../ensure_command_output.sh ../no_fail_on_no_tests.sh ./presto-product-tests/bin/run_on_docker.sh ${CLUSTER_TYPE} ${PRODUCT_TESTS}
     fi
   - |
