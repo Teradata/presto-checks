@@ -41,7 +41,7 @@ script:
   - export PRODUCT_TESTS_JAR=/tmp/artifacts/presto-product-tests-*-executable.jar
   - |
       [ ! $PRODUCT_TESTS == 'bulk' ] || \
-        ./presto-product-tests/bin/run_on_docker.sh multinode -x quarantine,big_query,profile_specific_tests,tpcds
+        ./presto-product-tests/bin/run_on_docker.sh singlenode -x quarantine,big_query,profile_specific_tests,tpcds
   - |
       [ ! $PRODUCT_TESTS == 'big_query' ] || \
         ./presto-product-tests/bin/run_on_docker.sh singlenode -g big_query,hdfs_no_impersonation
