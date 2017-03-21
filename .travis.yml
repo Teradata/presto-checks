@@ -29,7 +29,7 @@ install:
     --include 'presto-cli-*-executable.jar' \
     --include 'presto-product-tests-*-executable.jar' \
     --no-sign-request
-- git clone --depth=50 --branch=${PRESTO_BRANCH} https://github.com/Teradata/presto.git
+- git clone --depth=1000 --branch=${PRESTO_BRANCH} https://github.com/Teradata/presto.git
 - cd presto
 - git checkout `cat /tmp/artifacts/git-revision.txt`
 - git show HEAD --shortstat
