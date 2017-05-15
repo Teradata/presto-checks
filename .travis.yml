@@ -20,7 +20,7 @@ env:
     - MAVEN_OPTS="-Xmx512M -XX:+ExitOnOutOfMemoryError"
     - MAVEN_SKIP_CHECKS_AND_DOCS="-Dair.check.skip-all=true -Dmaven.javadoc.skip=true"
     - MAVEN_FAST_INSTALL="-DskipTests $MAVEN_SKIP_CHECKS_AND_DOCS -B -q -T C1"
-    - DISTRO_SKIP_GROUP=to_be_defined
+    - DISTRO_SKIP_GROUP=skip_on_hdp
 
 matrix:
   include:
