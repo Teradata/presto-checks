@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-if [[ $# -ne 4 ]]; then
-  echo 'Usage: trigger_checks_for_latest_build.sh $CHECKS_GITHUB_REPO $CHECKS_REPO_TRAVIS_TOKEN $CHECKS_BRANCH $PRESTO_BRANCH'
+if [[ $# -lt 4 ]]; then
+  echo 'Usage: trigger_checks_for_latest_build.sh $CHECKS_GITHUB_REPO $CHECKS_REPO_TRAVIS_TOKEN $CHECKS_BRANCH $PRESTO_BRANCH [force]'
   echo ''
   echo 'Passing $PRESTO_BRANCH = `@{LATEST_SPRINT_BRANCH}` will trigger checks for the latest sprint branch.'
   exit 1
@@ -11,6 +11,7 @@ CHECKS_GITHUB_REPO=${1/\//%2F}
 CHECKS_REPO_TRAVIS_TOKEN=$2
 CHECKS_BRANCH=$3
 PRESTO_BRANCH=$4
+FORCE=$5
 
 ARTIFACTS_S3_BUCKET='teradata-presto'
 ARTIFACTS_S3_PATH='travis_build_artifacts/Teradata/presto'
@@ -33,7 +34,7 @@ fi
 
 CHECKS_RESULTS_DIR=`aws_s3_ls s3://${ARTIFACTS_S3_BUCKET}/${ARTIFACTS_S3_PATH}/${PRESTO_BRANCH}/${PRESTO_BUILD}/travis_checks/${CHECKS_BRANCH}/`
 
-if [[ "$CHECKS_RESULTS_DIR" != '' ]]; then
+if [[ "$FORCE" == '' && "$CHECKS_RESULTS_DIR" != '' ]]; then
     echo "Checks for checks branch: [${CHECKS_BRANCH}] already performed for build [${PRESTO_BUILD}], not triggering them again."
     exit 0
 fi
