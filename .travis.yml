@@ -18,38 +18,39 @@ env:
     - MAVEN_OPTS="-Xmx512M -XX:+ExitOnOutOfMemoryError"
     - MAVEN_SKIP_CHECKS_AND_DOCS="-Dair.check.skip-all=true -Dmaven.javadoc.skip=true"
     - MAVEN_FAST_INSTALL="-DskipTests $MAVEN_SKIP_CHECKS_AND_DOCS -B -q -T C1"
+    - DISTRO_SKIP_GROUP=skip_on_cdh
 
 matrix:
   include:
     - env:
-      - PRODUCT_TESTS='-g tpcds -x quarantine -t q0,q1'
+      - PRODUCT_TESTS='-g tpcds -x quarantine,$DISTRO_SKIP_GROUP -t q0,q1'
       - CLUSTER_TYPE='singlenode'
     - env:
-      - PRODUCT_TESTS='-g tpcds -x quarantine -t q2,q3,q4'
+      - PRODUCT_TESTS='-g tpcds -x quarantine,$DISTRO_SKIP_GROUP -t q2,q3,q4'
       - CLUSTER_TYPE='singlenode'
     - env:
-      - PRODUCT_TESTS='-g tpcds -x quarantine -t q5,q6,q9'
+      - PRODUCT_TESTS='-g tpcds -x quarantine,$DISTRO_SKIP_GROUP -t q5,q6,q9'
       - CLUSTER_TYPE='singlenode'
     - env:
-      - PRODUCT_TESTS='-g tpcds -x quarantine -t q7,q8'
+      - PRODUCT_TESTS='-g tpcds -x quarantine,$DISTRO_SKIP_GROUP -t q7,q8'
       - CLUSTER_TYPE='singlenode'
     - env:
-      - PRODUCT_TESTS='-x quarantine,big_query,profile_specific_tests,tpcds'
+      - PRODUCT_TESTS='-x quarantine,big_query,profile_specific_tests,tpcds,$DISTRO_SKIP_GROUP'
       - CLUSTER_TYPE='singlenode'
     - env:
-      - PRODUCT_TESTS='-g big_query,hdfs_no_impersonation -x tpcds'
+      - PRODUCT_TESTS='-g big_query,hdfs_no_impersonation -x tpcds,$DISTRO_SKIP_GROUP'
       - CLUSTER_TYPE='singlenode'
     - env:
-      - PRODUCT_TESTS='-g hdfs_impersonation'
+      - PRODUCT_TESTS='-g hdfs_impersonation -x $DISTRO_SKIP_GROUP'
       - CLUSTER_TYPE='singlenode-hdfs-impersonation'
     - env:
-      - PRODUCT_TESTS='-g hdfs_impersonation,authorization,storage_formats,cli'
+      - PRODUCT_TESTS='-g hdfs_impersonation,authorization,storage_formats,cli -x $DISTRO_SKIP_GROUP'
       - CLUSTER_TYPE='singlenode-kerberos-hdfs-impersonation'
     - env:
-      - PRODUCT_TESTS='-g hdfs_no_impersonation,storage_formats,cli'
+      - PRODUCT_TESTS='-g hdfs_no_impersonation,storage_formats,cli -x $DISTRO_SKIP_GROUP'
       - CLUSTER_TYPE='singlenode-kerberos-hdfs-no-impersonation'
     - env:
-      - PRODUCT_TESTS='-g ldap_cli'
+      - PRODUCT_TESTS='-g ldap_cli -x $DISTRO_SKIP_GROUP'
       - CLUSTER_TYPE='singlenode-ldap'
     - env:
       - MVN_TESTS='-Dtest=TestLocalBinarySpilledQueries,TestPostgreSqlDistributedQueries,TestMySqlDistributedQueries'
