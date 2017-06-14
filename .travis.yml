@@ -8,6 +8,11 @@ dist: trusty
 # https://travis-ci.org/ArturGajowy/presto-checks/builds/185624131
 group: deprecated
 
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
+
 services:
 - docker
 
