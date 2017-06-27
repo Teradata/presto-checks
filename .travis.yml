@@ -1,6 +1,9 @@
 language: java
 
 dist: trusty
+# Use previous images because the current ones cause timeouts
+# https://blog.travis-ci.com/2017-06-21-trusty-updates-2017-Q2-launch
+group: deprecated-2017Q2
 
 addons:
   apt:
