@@ -1,12 +1,9 @@
 language: java
 
 dist: trusty
-# Stick to the previous image version untill the performance regression
-# introduced with https://docs.travis-ci.com/user/build-environment-updates/2016-12-01/
-# is fixed by Travis, or we make tpcds.q14_1 pass in reasonalbe time again ourselves.
-# The regression can be considered as fixed when q14_1 passes in around 6 minutes here:
-# https://travis-ci.org/ArturGajowy/presto-checks/builds/185624131
-group: deprecated
+# Use previous images because the current ones cause timeouts
+# https://blog.travis-ci.com/2017-06-21-trusty-updates-2017-Q2-launch 
+group: deprecated-2017Q2
 
 addons:
   apt:
