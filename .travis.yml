@@ -36,6 +36,9 @@ install:
     --include 'presto-server-*.tar.gz' \
     --include 'presto-cli-*-executable.jar' \
     --include 'presto-product-tests-*-executable.jar' \
+    --include 'presto-jdbc-*.jar' \
+    --exclude '*-tests.jar' \
+    --exclude '*-sources.jar' \
     --no-sign-request
 - git clone --depth=1000 --branch=${PRESTO_BRANCH} https://github.com/Teradata/presto.git
 - cd presto
@@ -47,6 +50,7 @@ script:
   - export PRESTO_SERVER_DIR=/tmp/presto-server-*
   - export PRESTO_CLI_JAR=/tmp/artifacts/presto-cli-*-executable.jar
   - export PRODUCT_TESTS_JAR=/tmp/artifacts/presto-product-tests-*-executable.jar
+  - export PRESTO_JDBC_DRIVER_JAR=/tmp/artifacts/presto-jdbc-*.jar
   - |
       [ ! $PRODUCT_TESTS == 'bulk' ] || \
         ./presto-product-tests/bin/run_on_docker.sh singlenode -x quarantine,big_query,profile_specific_tests,tpcds
@@ -59,6 +63,9 @@ script:
   - |
       [ ! $PRODUCT_TESTS == 'auth_mechanisms' ] || \
         ./presto-product-tests/bin/run_on_docker.sh singlenode-kerberos-hdfs-impersonation -g hdfs_impersonation,authorization
+  - |
+      [ ! $PRODUCT_TESTS == 'auth_mechanisms' ] || \
+        ./presto-product-tests/bin/run_on_docker.sh singlenode-ldap -g ldap_cli
 
 after_script:
 - |
