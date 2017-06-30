@@ -16,6 +16,7 @@ services:
 env:
   matrix:
   - PRODUCT_TESTS='bulk'
+  - PRODUCT_TESTS='hive_coercion'
   - PRODUCT_TESTS='big_query'
   - PRODUCT_TESTS='auth_mechanisms'
 
@@ -49,7 +50,10 @@ script:
   - export PRODUCT_TESTS_JAR=/tmp/artifacts/presto-product-tests-*-executable.jar
   - |
       [ ! $PRODUCT_TESTS == 'bulk' ] || \
-        ./presto-product-tests/bin/run_on_docker.sh singlenode -x quarantine,big_query,profile_specific_tests,tpcds
+        ./presto-product-tests/bin/run_on_docker.sh singlenode -x quarantine,big_query,profile_specific_tests,tpcds,hive_coercion
+  - |
+      [ ! $PRODUCT_TESTS == 'hive_coercion' ] || \
+        ./presto-product-tests/bin/run_on_docker.sh singlenode -g hive_coercion -x quarantine,big_query,tpcds,profile_specific_tests
   - |
       [ ! $PRODUCT_TESTS == 'big_query' ] || \
         ./presto-product-tests/bin/run_on_docker.sh singlenode -g big_query,hdfs_no_impersonation
