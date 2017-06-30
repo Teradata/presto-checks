@@ -37,7 +37,10 @@ matrix:
       - PRODUCT_TESTS='-g tpcds -x quarantine -t q8'
       - CLUSTER_TYPE='singlenode'
     - env:
-      - PRODUCT_TESTS='-x quarantine,big_query,profile_specific_tests,tpcds'
+      - PRODUCT_TESTS='-x quarantine,big_query,profile_specific_tests,tpcds,hive_connector'
+      - CLUSTER_TYPE='singlenode'
+    - env:
+      - PRODUCT_TESTS='-g hive_connector -x quarantine,big_query,profile_specific_tests,tpcds'
       - CLUSTER_TYPE='singlenode'
     - env:
       - PRODUCT_TESTS='-g big_query,hdfs_no_impersonation -x tpcds'
