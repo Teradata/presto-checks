@@ -24,28 +24,19 @@ matrix:
   include:
     - env:
       - PRODUCT_TESTS='-g tpcds -x quarantine,$DISTRO_SKIP_GROUP -t q0,q1'
-      - CLUSTER_TYPE='singlenode'
+      - CLUSTER_TYPE='singlenode-none-repartitioned'
     - env:
       - PRODUCT_TESTS='-g tpcds -x quarantine,$DISTRO_SKIP_GROUP -t q2,q3,q4'
-      - CLUSTER_TYPE='singlenode'
+      - CLUSTER_TYPE='singlenode-none-repartitioned'
     - env:
       - PRODUCT_TESTS='-g tpcds -x quarantine,$DISTRO_SKIP_GROUP -t q5,q6,q9'
-      - CLUSTER_TYPE='singlenode'
+      - CLUSTER_TYPE='singlenode-none-repartitioned'
     - env:
       - PRODUCT_TESTS='-g tpcds -x quarantine,$DISTRO_SKIP_GROUP -t q7,q8'
-      - CLUSTER_TYPE='singlenode'
+      - CLUSTER_TYPE='singlenode-none-repartitioned'
     - env:
-      - PRODUCT_TESTS='-x quarantine,big_query,profile_specific_tests,tpcds,$DISTRO_SKIP_GROUP'
-      - CLUSTER_TYPE='singlenode'
-    - env:
-      - PRODUCT_TESTS='-g big_query,hdfs_no_impersonation -x tpcds,$DISTRO_SKIP_GROUP'
-      - CLUSTER_TYPE='singlenode'
-    - env:
-      - PRODUCT_TESTS='-g hdfs_impersonation -x $DISTRO_SKIP_GROUP'
-      - CLUSTER_TYPE='singlenode-hdfs-impersonation'
-    - env:
-      - PRODUCT_TESTS='-g ldap_cli -x $DISTRO_SKIP_GROUP'
-      - CLUSTER_TYPE='singlenode-ldap'
+      - PRODUCT_TESTS='-g tpch -x quarantine,$DISTRO_SKIP_GROUP'
+      - CLUSTER_TYPE='singlenode-none-repartitioned'
 
 # The whole section is reserved for overriding by cron-ed API calls.
 # Partial overrides are impossible. See https://docs.travis-ci.com/user/triggering-builds.
