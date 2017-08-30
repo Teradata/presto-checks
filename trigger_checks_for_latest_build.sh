@@ -32,7 +32,7 @@ if [[ "$PRESTO_BRANCH" == '@{LATEST_SPRINT_BRANCH}' ]]; then
 fi
 
 if [[ "$PRESTO_BRANCH" == '@{LATEST_RELEASE_BRANCH}' ]]; then
-    PRESTO_BRANCH=`aws_s3_ls s3://${ARTIFACTS_S3_BUCKET}/${ARTIFACTS_S3_PATH}/ | sed 's/[/]$//' | egrep '^release-.*$' | version_sort | tail -n1`
+    PRESTO_BRANCH=`aws_s3_ls s3://${ARTIFACTS_S3_BUCKET}/${ARTIFACTS_S3_PATH}/ | sed 's/[/]$//' | egrep '^release-[0-9\.t-]+$' | version_sort | tail -n1`
     echo "Current release branch resolved to [${PRESTO_BRANCH}]"
 fi
 
