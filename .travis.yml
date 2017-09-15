@@ -25,13 +25,25 @@ env:
 matrix:
   include:
     - env:
-      - PRODUCT_TESTS="-g tpcds -x quarantine,$DISTRO_SKIP_GROUP -t q0,q1"
+      - PRODUCT_TESTS="-g tpcds -x quarantine,$DISTRO_SKIP_GROUP -t q0"
       - CLUSTER_TYPE="singlenode"
     - env:
-      - PRODUCT_TESTS="-g tpcds -x quarantine,$DISTRO_SKIP_GROUP -t q2,q3,q4"
+      - PRODUCT_TESTS="-g tpcds -x quarantine,$DISTRO_SKIP_GROUP -t q1"
       - CLUSTER_TYPE="singlenode"
     - env:
-      - PRODUCT_TESTS="-g tpcds -x quarantine,$DISTRO_SKIP_GROUP -t q5,q6,q9"
+      - PRODUCT_TESTS="-g tpcds -x quarantine,$DISTRO_SKIP_GROUP -t q2"
+      - CLUSTER_TYPE="singlenode"
+    - env:
+      - PRODUCT_TESTS="-g tpcds -x quarantine,$DISTRO_SKIP_GROUP -t q3"
+      - CLUSTER_TYPE="singlenode"
+    - env:
+      - PRODUCT_TESTS="-g tpcds -x quarantine,$DISTRO_SKIP_GROUP -t q4"
+      - CLUSTER_TYPE="singlenode"
+    - env:
+      - PRODUCT_TESTS="-g tpcds -x quarantine,$DISTRO_SKIP_GROUP -t q5"
+      - CLUSTER_TYPE="singlenode"
+    - env:
+      - PRODUCT_TESTS="-g tpcds -x quarantine,$DISTRO_SKIP_GROUP -t q6"
       - CLUSTER_TYPE="singlenode"
     - env:
       - PRODUCT_TESTS="-g tpcds -x quarantine,$DISTRO_SKIP_GROUP -t q7"
