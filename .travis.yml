@@ -31,6 +31,15 @@ matrix:
       - PRODUCT_TESTS="-g tpcds -x quarantine,$DISTRO_SKIP_GROUP -t q1"
       - CLUSTER_TYPE="singlenode"
     - env:
+      - PRODUCT_TESTS="-g tpcds1 -x quarantine,$DISTRO_SKIP_GROUP"
+      - CLUSTER_TYPE="singlenode"
+    - env:
+      - PRODUCT_TESTS="-g tpcds_long1 -x quarantine,$DISTRO_SKIP_GROUP"
+      - CLUSTER_TYPE="singlenode"
+    - env:
+      - PRODUCT_TESTS="-g tpcds_long2 -x quarantine,$DISTRO_SKIP_GROUP"
+      - CLUSTER_TYPE="singlenode"
+    - env:
       - PRODUCT_TESTS="-g tpcds -x quarantine,$DISTRO_SKIP_GROUP -t q2"
       - CLUSTER_TYPE="singlenode"
     - env:
