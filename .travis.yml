@@ -61,7 +61,7 @@ matrix:
       - PRODUCT_TESTS="-g tpcds -x quarantine,$DISTRO_SKIP_GROUP -t q8"
       - CLUSTER_TYPE="singlenode"
     - env:
-      - PRODUCT_TESTS="-x quarantine,big_query,profile_specific_tests,tpcds,hive_connector,$DISTRO_SKIP_GROUP"
+      - PRODUCT_TESTS="-x quarantine,big_query,profile_specific_tests,tpcds,hive_connector,tpcds1,tpcds_long1,tpcds_long2,$DISTRO_SKIP_GROUP"
       - CLUSTER_TYPE="singlenode"
     - env:
       - PRODUCT_TESTS="-g hive_connector -x quarantine,big_query,profile_specific_tests,tpcds,$DISTRO_SKIP_GROUP"
