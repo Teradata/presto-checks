@@ -43,7 +43,7 @@ So far, the build defined in `.travis.yml` will:
 ```
 trigger_checks_for_latest_build.sh $REPO $TOKEN sprint sprint-37
 ```
-This will dowload the latest **artifacts and product tests** for `sprint-37` from [Teradata's s3](teradata-presto.s3.amazonaws.com/index.html?prefix=travis_build_artifacts/Teradata/presto/) and run the product tests using the long-running configurations defined in `travis.yml` (more precisely, the version available on `sprint` branch of the `$REPO`)
+This will dowload the latest **artifacts and product tests** for `sprint-37` from [Teradata's s3](https://teradata-presto.s3.amazonaws.com/index.html?prefix=travis_build_artifacts/Teradata/presto/) and run the product tests using the long-running configurations defined in `travis.yml` (more precisely, the version available on `sprint` branch of the `$REPO`)
 
 - for master branch:
 ```
